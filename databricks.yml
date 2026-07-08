@@ -10,3 +10,5 @@ targets:
     default: true
   prod:
     mode: production
+    workspace:
+      root_path: /Workspace/Users/akash.dolas@gmail.com/.bundle/${bundle.name}/${bundle.target}
