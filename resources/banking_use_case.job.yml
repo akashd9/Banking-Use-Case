@@ -2,6 +2,10 @@ resources:
   jobs:
     banking_transformations:
       name: banking-transformations-${bundle.target}
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?"
+        timezone_id: UTC
+        pause_status: UNPAUSED
       tasks:
         - task_key: run_transformations
           spark_python_task:
