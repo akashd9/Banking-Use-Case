@@ -3,7 +3,7 @@ name: Test and Deploy Bundle
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
   test-and-deploy:
@@ -25,8 +25,17 @@ jobs:
       - name: Install Databricks CLI
         run: curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
+      - name: Determine deploy target
+        id: target
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "target=prod" >> "$GITHUB_OUTPUT"
+          else
+            echo "target=dev" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Deploy bundle
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-        run: databricks bundle deploy -t prod
+        run: databricks bundle deploy -t ${{ steps.target.outputs.target }}
